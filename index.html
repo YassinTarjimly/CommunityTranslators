@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjimly Profile Picture Frame Generator</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin: 20px; }
+        canvas { border: 1px solid #ccc; margin-bottom: 10px; }
+        input, button { margin: 5px; }
+    </style>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.6.0/fabric.min.js"></script>
+</head>
+<body>
+    <h1>Tarjimly Profile Picture Frame Generator</h1>
+    <input type="file" id="uploadImage" accept="image/*">
+    <br>
+    <canvas id="canvas" width="768" height="768"></canvas>
+    <br>
+    <button id="downloadBtn">Download My Profile Picture</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const canvas = new fabric.Canvas('canvas', { backgroundColor: '#fff' });
+            let frameImage;
+
+            fabric.Image.fromURL('https://raw.githubusercontent.com/YassinTarjimly/CommunityTranslators/main/Tarjimly%20Profile%20Picture%20Filter_Community%20Translator.png', function(img) {
+                frameImage = img;
+                frameImage.selectable = false;
+                frameImage.evented = false;
+                frameImage.scaleToWidth(768);
+                frameImage.scaleToHeight(768);
+                canvas.add(frameImage);
+                canvas.sendToBack(frameImage);
+            });
+
+            document.getElementById('uploadImage').addEventListener('change', function(e) {
+                const reader = new FileReader();
+                reader.onload = function(f) {
+                    fabric.Image.fromURL(f.target.result, function(img) {
+                        img.scaleToWidth(768);
+                        img.scaleToHeight(768);
+                        canvas.insertAt(img, 0);
+                    });
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            });
+
+            document.getElementById('downloadBtn').addEventListener('click', function() {
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL({ format: 'png' });
+                link.download = 'Tarjimly_Profile_Picture.png';
+                link.click();
+            });
+        });
+    </script>
+</body>
+</html>
